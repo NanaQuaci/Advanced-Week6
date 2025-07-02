@@ -44,11 +44,11 @@ jobs:
         run: |
           curl -X POST -H 'Content-type: application/json' \
           --data '{"text":"✅ CI passed for *BankAppAutomation*! All tests succeeded on `${{ github.ref_name }}` branch."}' \
-          ${{ secrets.SLACK_WEBHOOK }}
+          ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Slack on Failure
         if: failure()
         run: |
           curl -X POST -H 'Content-type: application/json' \
           --data '{"text":"❌ CI failed for *BankAppAutomation* on `${{ github.ref_name }}`. Check the workflow logs."}' \
-          ${{ secrets.SLACK_WEBHOOK }}
+          ${{ secrets.SLACK_WEBHOOK_URL }}
