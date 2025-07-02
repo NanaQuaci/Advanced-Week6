@@ -38,3 +38,17 @@ jobs:
         with:
           name: allure-results
           path: target/allure-results
+
+      - name: Notify Slack on Success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"✅ CI passed for *BankAppAutomation*! All tests succeeded on `${{ github.ref_name }}` branch."}' \
+          ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Notify Slack on Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"❌ CI failed for *BankAppAutomation* on `${{ github.ref_name }}`. Check the workflow logs."}' \
+          ${{ secrets.SLACK_WEBHOOK }}
