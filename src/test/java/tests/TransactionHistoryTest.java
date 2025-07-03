@@ -44,28 +44,58 @@ public class TransactionHistoryTest extends BaseTest {
     @Story("Customer resets transactions")
     @Severity(SeverityLevel.NORMAL)
     @Description("CU_007 - Ensure customer cannot reset list of previous transactions")
-    public void testTransactionHistoryCannotBeReset_CU_007() {
+    public void testTransactionHistoryCannotBeReset_CU_007() throws InterruptedException {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.navigateToHomePage();
         loginPage.clickCustomerLogin();
         loginPage.selectCustomer(availableCustomerName);
         loginPage.clickLogin();
 
-
         CustomerPage customerPage = new CustomerPage(driver);
         customerPage.deposit(validDepositAmount);
         customerPage.deposit(validDepositAmount2);
-        customerPage.withdraw(validWithdrawalAmount2);
 
         TransactionPage transactionPage = new TransactionPage(driver);
         transactionPage.viewTransactions();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
-        boolean isResetButtonPresent = transactionPage.tryToResetTransactions();
-        assertFalse(isResetButtonPresent, "Reset button should not be available for transaction history.");
-
-        boolean cleared = transactionPage.tryToResetTransactions();
-        assertFalse(cleared, "Transactions should not be cleared or reset.");
+        assertFalse(transactionPage.isResetButtonPresent(), "Reset button should not be available for transaction history.");
     }
+
+    @Test
+    @Story("Customer reset restriction")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("CU_007_NEG - Ensure that clicking reset does not clear transaction history if reset is wrongly available")
+    public void testResetTransactionHistoryIsBlocked_CU_007_NEG() throws InterruptedException {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.navigateToHomePage();
+        loginPage.clickCustomerLogin();
+        loginPage.selectCustomer(availableCustomerName);
+        loginPage.clickLogin();
+
+        CustomerPage customerPage = new CustomerPage(driver);
+        customerPage.deposit(validDepositAmount);
+        customerPage.deposit(validDepositAmount2);
+
+        TransactionPage transactionPage = new TransactionPage(driver);
+        transactionPage.viewTransactions();
+
+        // If reset button exists, click it
+        if (transactionPage.isResetButtonPresent()) {
+            transactionPage.clickResetButton();
+            Thread.sleep(3000);
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+
+        // Verify that transactions are still visible
+        new WebDriverWait(driver, Duration.ofSeconds(5));
+        assertFalse(transactionPage.areTransactionsCleared(),
+                "Transactions should not be cleared even if reset button is clicked.");
+    }
+
+
 }

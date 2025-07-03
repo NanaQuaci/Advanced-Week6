@@ -23,7 +23,7 @@ public class CustomerPage extends BasePage {
         super(driver);
     }
 
-    private void performTransaction(By tab, String amount) {
+    private void performTransaction(By tab, String amount, boolean expectMessage) {
         click(tab);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -35,16 +35,23 @@ public class CustomerPage extends BasePage {
         amountInput.sendKeys(amount);
 
         click(submitButton);
+        if (expectMessage) {
+            try {
+                wait.until(ExpectedConditions.visibilityOfElementLocated(successMessage));
+            } catch (TimeoutException e) {
+                // Optional: log or ignore
+            }
+        }
     }
 
     @Step("Depositing amount: {amount}")
     public void deposit(String amount) {
-        performTransaction(depositTab, amount);
+        performTransaction(depositTab, amount, true);
     }
 
     @Step("Withdrawing amount: {amount}")
     public void withdraw(String amount) {
-        performTransaction(withdrawTab, amount);
+        performTransaction(withdrawTab, amount, true);
     }
 
     public String getSuccessMessage() {

@@ -6,8 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.util.UUID;
-
 public class BaseTest {
     protected WebDriver driver;
 
@@ -15,15 +13,13 @@ public class BaseTest {
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
 
-        // Headless for CI and GitHub Actions
-        options.addArguments("--headless=new"); // Use new headless mode
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--remote-allow-origins=*");
-
-        // Unique user data directory to avoid session conflicts in CI
-        options.addArguments("--user-data-dir=/tmp/chrome-profile-" + UUID.randomUUID());
+        // These options fix DevToolsActivePort issue
+//        options.addArguments("--headless=new"); // Use old --headless if "new" fails
+//        options.addArguments("--no-sandbox");
+//        options.addArguments("--disable-dev-shm-usage");
+//        options.addArguments("--disable-gpu");
+//        options.addArguments("--remote-allow-origins=*");
+//        options.addArguments("--window-size=1920,1080");
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
@@ -33,7 +29,7 @@ public class BaseTest {
     public void tearDown() {
         if (driver != null) {
             try {
-                Thread.sleep(3000); // Optional: wait for visual inspection
+                Thread.sleep(2000); // Optional: Allow UI to settle before closing
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
