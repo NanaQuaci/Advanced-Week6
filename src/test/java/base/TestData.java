@@ -15,9 +15,9 @@ public class TestData {
     public static String validWithdrawalAmount2 = "1000";
 
 
-    // Invalid test data
+    //Invalid test data
     public static String invalidFirstName = "Nana123";
-    public static String invalidLastName = "Quac@i";
+    public static String invalidLastName = "Quac@@i";
     public static String invalidAmount = "-300";
     public static String negativeWithdrawalAmount = "-300";
     public static String hugeWithdrawalAmount = "999999";
