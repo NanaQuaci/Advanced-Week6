@@ -14,12 +14,12 @@ public class BaseTest {
         ChromeOptions options = new ChromeOptions();
 
         // These options fix DevToolsActivePort issue
-//        options.addArguments("--headless=new"); // Use old --headless if "new" fails
-//        options.addArguments("--no-sandbox");
-//        options.addArguments("--disable-dev-shm-usage");
-//        options.addArguments("--disable-gpu");
-//        options.addArguments("--remote-allow-origins=*");
-//        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--headless=new"); // Use old --headless if "new" fails
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--window-size=1920,1080");
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
